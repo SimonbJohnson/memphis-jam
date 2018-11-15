@@ -54,6 +54,7 @@ function generateLevelObject(difficulty){
 function arrange(level,nodes){
 	level.nodes.forEach(function(n){
 		shift = Math.floor(Math.random()*3);
+		n.shift = shift;
 		n.connections.forEach(function(c,i){
 			level.nodes[i].start += -c*shift;
 		});
@@ -84,4 +85,24 @@ function shuffle(array) {
 var layouts = [{}];
 layouts.push({'background':'3nodes_1.png','nodes':[{'x':500,'y':450},{'x':500,'y':800},{'x':500,'y':1150}]});
 layouts.push({'background':'4nodes_1.png','nodes':[{'x':150,'y':150},{'x':650,'y':350},{'x':500,'y':850},{'x':250,'y':1300}]});
-layouts.push({nodes:[{'x':200,'y':200},{'x':600,'y':200},{'x':200,'y':400},{'x':600,'y':400},{'x':400,'y':300}]});
+layouts.push({'background':'5nodes_1.png','nodes':[{'x':500,'y':500},{'x':200,'y':800},{'x':500,'y':800},{'x':800,'y':800},{'x':500,'y':1100}]});
+
+var music = [[]];
+var tune = {'interval':208,'tracks':[]};
+tune.tracks.push([['piano-ff-042.wav','piano-ff-030.wav'],[],[],[],[],[],[],[],['piano-ff-042.wav','piano-ff-030.wav'],[],[],[],[],[],[],[],['piano-ff-037.wav','piano-ff-025.wav'],[],[],[],[],[],[],[],['piano-ff-040.wav','piano-ff-028.wav'],[],[],[],[],[],[],[]]);
+tune.tracks.push([['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-056.wav'],[],[],[],[],[],[],[]]);
+tune.tracks.push([[],['piano-ff-052.wav'],[],[],[],[],[],[],[],['piano-ff-052.wav'],[],[],[],[],[],[],[],['piano-ff-052.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[]]);
+tune.tracks.push([[],[],['piano-ff-049.wav'],[],[],[],[],[],[],[],['piano-ff-049.wav'],[],[],[],[],[],[],[],['piano-ff-049.wav'],[],[],[],[],[],[],[],['piano-ff-049.wav'],[],[],[],[],[]]);
+
+music.push(tune);
+
+var tune = {'interval':208,'tracks':[]};
+tune.tracks.push([['piano-ff-042.wav','piano-ff-030.wav'],[],['piano-ff-042.wav','piano-ff-030.wav'],[],['piano-ff-042.wav','piano-ff-030.wav'],[],['piano-ff-042.wav','piano-ff-030.wav'],[],['piano-ff-041.wav','piano-ff-029.wav'],[],['piano-ff-041.wav','piano-ff-029.wav'],[],['piano-ff-041.wav','piano-ff-029.wav'],[],['piano-ff-041.wav','piano-ff-029.wav'],[],['piano-ff-037.wav','piano-ff-025.wav'],[],['piano-ff-037.wav','piano-ff-025.wav'],[],['piano-ff-037.wav','piano-ff-025.wav'],[],['piano-ff-037.wav','piano-ff-025.wav'],[],['piano-ff-044.wav','piano-ff-032.wav'],[],['piano-ff-044.wav','piano-ff-032.wav'],[],['piano-ff-044.wav','piano-ff-032.wav'],[],['piano-ff-044.wav','piano-ff-032.wav'],[]]);
+tune.tracks.push([['piano-ff-056.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-053.wav'],[],[],[],[],[],[],[],['piano-ff-049.wav'],[],[],[],[],[],[],[]]);
+tune.tracks.push([[],[],['piano-ff-056.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-053.wav'],[],[],[],[],[],[],[],['piano-ff-049.wav'],[],[],[],[],[]]);
+tune.tracks.push([[],[],[],[],['piano-ff-056.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-053.wav'],[],[],[],[],[],[],[],['piano-ff-049.wav'],[],[],[]]);
+tune.tracks.push([[],[],[],[],[],[],['piano-ff-056.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-053.wav'],[],[],[],[],[],[],[],['piano-ff-049.wav'],[]]);
+
+music.push(tune);
+
+

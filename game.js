@@ -1,3 +1,7 @@
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
 var config = {
     type: Phaser.AUTO,
     width: 1000,
@@ -23,8 +27,11 @@ function init(data){
 
 	let layoutNum = Math.ceil(difficulty/2);
 	let layout = layouts[layoutNum];
-	console.log(layout.background);
+
 	this.level.backgroundImage = layout.background;
+	this.level.music = music[layoutNum];
+	this.level.music.delta = 0;
+	this.level.music.position = 0;
 
 	this.level.nodes.forEach(function(node,i){
 		node.value = node.start;
@@ -37,12 +44,33 @@ function init(data){
 
 function preload ()
 {
+
+	var parent = this;
+
 	this.load.spritesheet('state_indicator', 
         'assets/state_indicator.png',
         { frameWidth: 64, frameHeight: 64 }
     );
-	console.log(this.level.backgroundImage);
+
     this.load.image(this.level.backgroundImage,'assets/backgrounds/'+this.level.backgroundImage);
+
+    var samples = [];
+    this.level.music.tracks.forEach(function(track){
+    	track.forEach(function(beat){
+
+    		if(beat.length>0){
+    			beat.forEach(function(sample){
+    				if(samples.indexOf(sample)==-1){
+    					samples.push(sample);
+    				}
+    			});
+    		}
+    	});
+    });
+    samples.forEach(function(sample){
+    	parent.load.audio(sample,'assets/samples/'+sample);
+    });
+    this.load.audio('drums','assets/samples/drum_test.wav');
 }
 
 function create (data){
@@ -147,7 +175,27 @@ function levelWin(parent,level){
 	}
 }
 
-function update ()
+function update (time, delta)
 {
-
+	var parent = this;
+	var music = this.level.music;
+	music.delta+=delta;
+	if(music.delta>music.interval){
+		if(mod(music.position,128)==0){
+			this.sound.play('drums');
+		}
+		music.delta=0;
+		music.tracks.forEach(function(track,i){
+			var shiftPosition = music.position;
+			if(i>0){
+				console.log(parent.level.nodes);
+				shiftPosition = music.position+parent.level.nodes[i-1].state-parent.level.nodes[i-1].shift;
+			}
+			var beat = track[mod(shiftPosition, 32)];
+			beat.forEach(function(sample){
+				parent.sound.play(sample);
+			});
+		});
+		music.position++;
+	}
 }

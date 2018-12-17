@@ -17,6 +17,7 @@ Here is the target end state.
 Currently the prototype is built as a mobile game, but can be quickly ported to a multiplayer desktop game. Custom controls would be built with hope that six or more players can play simultaneously.
 
 Example possible buttons
+
 ![](https://i.ebayimg.com/images/g/r2UAAOSw5UZY~xOW/s-l300.jpg)
 
 As the difficulty progresses the game will ask the current team to invite people around them to join and increase the team size. New players would have easy onboarding with their button being assigned to only control one circle. We hope that this game can quickly bring strangers together in a shared goal and that throughout the rest of the exhibition they feel able to chat and play together.
@@ -24,6 +25,10 @@ As the difficulty progresses the game will ask the current team to invite people
 How to play the prototype (mobile web version)
 On the mobile version of the game, instead of individual buttons for each player, the white circles now also act as inputs. Click the white circles through their states to get all of the white circles equal to the red outline.
 
-Beware! Currently there is no transition through levels and they load instantly when solved. Each background is repeated twice with slightly more difficult the second time round. If you are not careful it might load the next level without you noticing!
+Beware! Currently there is no transition through levels and they load after a short pause when solved. Each background is repeated twice with slightly more difficult the second time round. If you are not careful it might load the next level without you noticing! In total for the prototype there is currently two levels per two backgrounds for a total of 4. Levels are randomly generated so it can be played multiple times.
 
 ![](https://github.com/SimonbJohnson/memphis-jam/blob/master/wip/screenshot4.png?raw=true)
+
+Play prototype here:
+https://simonbjohnson.github.io/memphis-jam/
+https://simonbjohnson.github.io/memphis-jam/

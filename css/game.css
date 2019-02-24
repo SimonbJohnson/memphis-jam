@@ -1,0 +1,16 @@
+body {
+	margin:0;
+}
+
+#app {
+	width: 100%;
+   	text-align:center;
+}
+
+#app canvas{
+  	display: inline;
+}
+
+#interface {
+	display: none;
+}

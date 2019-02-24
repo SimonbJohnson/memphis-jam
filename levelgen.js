@@ -1,11 +1,10 @@
-function generateLevel(difficulty){
-	var level = generateLevelObject(difficulty);
+function generateLevel(difficulty,players,nodes){
+	var level = generateLevelObject(difficulty,players,nodes);
 	return level;
 }
 
-function generateLevelObject(difficulty){
+function generateLevelObject(difficulty,players,totalNodes){
 	var level = {'nodes' : []}
-	var totalNodes = Math.ceil(difficulty/2)+2
 	var nodeDifficulty = difficulty*2
 	for(i=0;i<totalNodes;i++){
 		level.nodes.push({'start':10,'connections':[]});
@@ -15,6 +14,7 @@ function generateLevelObject(difficulty){
 			n.connections.push(0);
 		}
 	});
+
 	var minConnections = totalNodes < 5 ? 1 : 2;
 	var maxConnections = Math.ceil(totalNodes/2+1);
 	var totalConnections = Math.ceil(totalNodes * (minConnections+maxConnections)/(1.8+0.4*(difficulty % 2)));
@@ -27,11 +27,14 @@ function generateLevelObject(difficulty){
 			connectionsList.push(i);
 		}
 	}
+	console.log(connectionsList);
+
 	var remaining = totalConnections - connectionsList.length;
 	for(i=0;i<remaining;i++){
 		var newNode = Math.floor(Math.random() * totalNodes);
 		connectionsList.push(newNode);
 	}
+	console.log(connectionsList);
 	connectionsList = shuffle(connectionsList);
 	for(i=0;i<totalNodes;i++){
 		var direction = Math.floor(Math.random() * 2)*2-1;
@@ -83,8 +86,8 @@ function shuffle(array) {
 }
 
 var layouts = [{}];
-layouts.push({'background':'3nodes_1.png','nodes':[{'x':500,'y':450},{'x':500,'y':800},{'x':500,'y':1150}]});
-layouts.push({'background':'4nodes_1.png','nodes':[{'x':150,'y':150},{'x':650,'y':350},{'x':500,'y':850},{'x':250,'y':1300}]});
+layouts.push({'background':'3nodes_1.png','nodes':[{'x':800,'y':450},{'x':800,'y':800},{'x':800,'y':1150}]});
+layouts.push({'background':'4nodes_1.png','nodes':[{'x':450,'y':150},{'x':950,'y':350},{'x':800,'y':850},{'x':550,'y':1300}]});
 layouts.push({'background':'5nodes_1.png','nodes':[{'x':500,'y':500},{'x':200,'y':800},{'x':500,'y':800},{'x':800,'y':800},{'x':500,'y':1100}]});
 
 var music = [[]];

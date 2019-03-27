@@ -4,20 +4,23 @@ function generateLevel(difficulty,players,nodes){
 }
 
 function generateLevelObject(difficulty,players,totalNodes){
-	var level = {'nodes' : []}
+	var level = {'nodes' : [],'players':[]}
 	var nodeDifficulty = difficulty*2
 	for(i=0;i<totalNodes;i++){
-		level.nodes.push({'start':10,'connections':[]});
+		level.nodes.push({'start':10});
 	}
-	level.nodes.forEach(function(n){
+
+	for(i=0;i<players;i++){
+		level.players.push({'connections':[]});
+	}
+
+	level.players.forEach(function(p){
 		for(i=0;i<totalNodes;i++){
-			n.connections.push(0);
+			p.connections.push(0);
 		}
 	});
 
-	var minConnections = totalNodes < 5 ? 1 : 2;
-	var maxConnections = Math.ceil(totalNodes/2+1);
-	var totalConnections = Math.ceil(totalNodes * (minConnections+maxConnections)/(1.8+0.4*(difficulty % 2)));
+	var totalConnections = difficulty;
 
 	var connectionsList = [];
 
@@ -36,34 +39,55 @@ function generateLevelObject(difficulty,players,totalNodes){
 	}
 	console.log(connectionsList);
 	connectionsList = shuffle(connectionsList);
-	for(i=0;i<totalNodes;i++){
+
+	level.players.forEach(function(p){
 		var direction = Math.floor(Math.random() * 2)*2-1;
-		level.nodes[i].connections[connectionsList.pop()] = direction;
-		if(totalNodes>4){
-			var direction = Math.floor(Math.random() * 2)*2-1;
-			level.nodes[i].connections[connectionsList.pop()] = direction;
+		p.connections[connectionsList.pop()] = direction;		
+	});
+
+	while(connectionsList.length>0){
+		let connection = connectionsList.pop();
+		let unassigned = 0;
+		while(unassigned<50){
+			let randomPlayer = Math.floor(Math.random()*players);
+			let direction = Math.floor(Math.random() * 2)*2-1;
+			unassigned++;
+			console.log(unassigned);
+			if(level.players[randomPlayer].connections[connection]==0){
+				level.players[randomPlayer].connections[connection] = direction;
+				unassigned = 50;
+			}
 		}
 	}
-	while(connectionsList.length>0){
-		var randomNode = Math.floor(Math.random()*totalNodes);
-		var direction = Math.floor(Math.random() * 2)*2-1;
-		level.nodes[randomNode].connections[connectionsList.pop()] = direction;
-	}
+
 	level = arrange(level,totalNodes);
+	if(levelCheck(level)<3){
+		level = generateLevelObject(difficulty,players,totalNodes);
+	}
 
 	return level;
 }
 
 function arrange(level,nodes){
-	level.nodes.forEach(function(n){
+	level.players.forEach(function(p){
 		shift = Math.floor(Math.random()*3);
-		n.shift = shift;
-		n.connections.forEach(function(c,i){
+		p.shift = shift;
+		p.connections.forEach(function(c,i){
 			level.nodes[i].start += -c*shift;
 		});
 	});
 
 	return level
+}
+
+function levelCheck(level){
+	let offs = 0;
+	level.nodes.forEach(function(node){
+		if(node.start != 10){
+			offs++
+		}
+	});
+	return offs;
 }
 
 function shuffle(array) {
@@ -85,12 +109,21 @@ function shuffle(array) {
   return array;
 }
 
-var layouts = [{}];
-layouts.push({'background':'3nodes_1.png','nodes':[{'x':800,'y':450},{'x':800,'y':800},{'x':800,'y':1150}]});
-layouts.push({'background':'4nodes_1.png','nodes':[{'x':450,'y':150},{'x':950,'y':350},{'x':800,'y':850},{'x':550,'y':1300}]});
-layouts.push({'background':'5nodes_1.png','nodes':[{'x':500,'y':500},{'x':200,'y':800},{'x':500,'y':800},{'x':800,'y':800},{'x':500,'y':1100}]});
+var layouts = [];
+layouts.push({'background':'3nodes_1.png','nodes':[{'x':540,'y':240},{'x':540,'y':540},{'x':540,'y':840}]});
+layouts.push({'background':'4nodes_1.png','nodes':[{'x':304,'y':101},{'x':641,'y':236},{'x':540,'y':574},{'x':371,'y':878}]});
+layouts.push({'background':'5nodes_2.png','nodes':[{'x':540,'y':338},{'x':338,'y':540},{'x':540,'y':540},{'x':743,'y':540},{'x':540,'y':743}]});
+layouts.push({'background':'6nodes_1.png','nodes':[{'x':200,'y':300},{'x':540,'y':300},{'x':880,'y':300},{'x':200,'y':780},{'x':540,'y':780},{'x':880,'y':780}]});
 
-var music = [[]];
+var music = [];
+var tune = {'interval':208,'tracks':[]};
+tune.tracks.push([['piano-ff-042.wav','piano-ff-030.wav'],[],[],[],[],[],[],[],['piano-ff-042.wav','piano-ff-030.wav'],[],[],[],[],[],[],[],['piano-ff-037.wav','piano-ff-025.wav'],[],[],[],[],[],[],[],['piano-ff-040.wav','piano-ff-028.wav'],[],[],[],[],[],[],[]]);
+tune.tracks.push([['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-056.wav'],[],[],[],[],[],[],[]]);
+tune.tracks.push([[],['piano-ff-052.wav'],[],[],[],[],[],[],[],['piano-ff-052.wav'],[],[],[],[],[],[],[],['piano-ff-052.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[]]);
+
+
+music.push(tune);
+
 var tune = {'interval':208,'tracks':[]};
 tune.tracks.push([['piano-ff-042.wav','piano-ff-030.wav'],[],[],[],[],[],[],[],['piano-ff-042.wav','piano-ff-030.wav'],[],[],[],[],[],[],[],['piano-ff-037.wav','piano-ff-025.wav'],[],[],[],[],[],[],[],['piano-ff-040.wav','piano-ff-028.wav'],[],[],[],[],[],[],[]]);
 tune.tracks.push([['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-054.wav'],[],[],[],[],[],[],[],['piano-ff-056.wav'],[],[],[],[],[],[],[]]);

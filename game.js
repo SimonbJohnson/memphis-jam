@@ -9,24 +9,39 @@ class IntroScene extends Phaser.Scene {
 	}
 
 	preload(){
-		this.load.image('intro','assets/backgrounds/intro.png');
+		this.load.image('intro0','assets/backgrounds/intro0.png');
+		this.load.image('intro1','assets/backgrounds/intro2.png');
+		this.load.image('intro2','assets/backgrounds/intro3.png');
+		this.load.image('intro3','assets/backgrounds/intro4.png');
 	}
 
 	create(){
 
 		let parent = this;
 
-	    resize();		
-		this.add.image(540, 540, 'intro');
-
+	    resize();
+	    this.add.text(240, 140, '', { fontFamily:'Monoton',fontSize: '100px', fill: '#fff', align: 'center', stroke: '#000000', strokeThickness: 15 });		
+		screen = this.add.sprite(640, 540, 'intro0');
+		this.intro=0
 		parent.input.keyboard.on('keydown', function (event) {
 			if(!isNaN(event.key)){
 				var key = parseInt(event.key);
-				if(key==1){
+				if(key>0){
 					levelController(parent);
 				}
 			};
 		});
+	}
+
+	update(){
+		screen.angle += 1;
+		if(screen.angle < -179){
+			this.intro++;
+			if(this.intro==4){
+				this.intro=0;
+			}
+			screen.setTexture('intro'+this.intro)
+		}
 	}
 }
 
@@ -39,12 +54,87 @@ class LoadScene extends Phaser.Scene {
 		this.load.image('start','assets/backgrounds/start.png');
 	}
 
+	create(data){
+
+		let parent = this;
+		//window.addEventListener('resize', resize);
+	    resize();		
+		this.add.image(640, 540, 'start');
+		
+		this.add.text(280, 220, data.leveltext, { fontFamily:'Monoton',fontSize: '100px', fill: '#69d2d2', align: 'center', stroke: '#000000', strokeThickness: 15 });
+		this.add.text(data.invitestart, 440, data.invitetext, { fontFamily:'Monoton',fontSize: '60px', fill: '#69d2d2', align: 'center', stroke: '#000000', strokeThickness: 10 });
+		this.add.text(480, 640, 'player  '+data.keyStart, { fontFamily:'Monoton',fontSize: '60px', fill: '#69d2d2', align: 'center', stroke: '#000000', strokeThickness: 10 });
+		this.add.text(360, 740, 'press  to  start', { fontFamily:'Monoton',fontSize: '60px', fill: '#69d2d2', align: 'center', stroke: '#000000', strokeThickness: 10 });
+		parent.input.keyboard.on('keydown', function (event) {
+			if(!isNaN(event.key)){
+				var key = parseInt(event.key);
+				if(key==data.keyStart){
+					levelController(parent);
+				}
+				if(key==0){
+					sequencePosition = -1
+					levelController(parent);
+				}
+			};
+		});
+	}	
+}
+
+class InstructionScene extends Phaser.Scene {
+	constructor (){
+		super({key: 'instructionScene'})
+	}
+
+	preload(){
+		this.load.image('screen0','assets/backgrounds/instruct1.png');
+		this.load.image('screen1','assets/backgrounds/instruct2.png');
+		this.load.image('screen2','assets/backgrounds/instruct3.png');
+		this.load.image('screen3','assets/backgrounds/instruct4.png');
+	}
+
+	create(){
+		let parent = this;
+		let track = 0;
+		//window.addEventListener('resize', resize);
+	    resize();		
+		this.add.image(640, 540, 'screen0');
+
+		parent.input.keyboard.on('keydown', function (event) {
+			if(!isNaN(event.key)){
+				var key = parseInt(event.key);
+				if(key==1){
+					track++;
+					let image = 'screen'+track;
+					parent.add.image(640, 540, image);
+					if(track==4){
+						levelController(parent);
+					}
+				}
+				if(key==0){
+					sequencePosition = -1
+					levelController(parent);
+				}
+			};
+		});
+	}
+
+}
+
+class WinScene extends Phaser.Scene {
+	constructor (){
+		super({ key: 'winScene'})
+	}
+
+	preload(){
+		this.load.image('win','assets/backgrounds/win.png');
+	}
+
 	create(){
 
 		let parent = this;
 		//window.addEventListener('resize', resize);
 	    resize();		
-		this.add.image(540, 540, 'start');
+		this.add.image(640, 540, 'win');
 
 		parent.input.keyboard.on('keydown', function (event) {
 			if(!isNaN(event.key)){
@@ -52,8 +142,13 @@ class LoadScene extends Phaser.Scene {
 				if(key==1){
 					levelController(parent);
 				}
+				if(key==0){
+					sequencePosition = -1
+					levelController(parent);
+				}
 			};
 		});
+
 	}	
 }
 
@@ -101,22 +196,24 @@ class PlayScene extends Phaser.Scene {
 
 	    this.load.image(this.level.backgroundImage,'assets/backgrounds/'+this.level.backgroundImage);
 
-	    var samples = [];
-	    this.level.music.tracks.forEach(function(track){
-	    	track.forEach(function(beat){
+	    if(sound){
+		    var samples = [];
+		    this.level.music.tracks.forEach(function(track){
+		    	track.forEach(function(beat){
 
-	    		if(beat.length>0){
-	    			beat.forEach(function(sample){
-	    				if(samples.indexOf(sample)==-1){
-	    					samples.push(sample);
-	    				}
-	    			});
-	    		}
-	    	});
-	    });
-	    samples.forEach(function(sample){
-	    	parent.load.audio(sample,'assets/samples/'+sample);
-	    });
+		    		if(beat.length>0){
+		    			beat.forEach(function(sample){
+		    				if(samples.indexOf(sample)==-1){
+		    					samples.push(sample);
+		    				}
+		    			});
+		    		}
+		    	});
+		    });
+		    samples.forEach(function(sample){
+		    	parent.load.audio(sample,'assets/samples/'+sample);
+		    });
+		}
 	}
 
 	create (data){
@@ -124,7 +221,7 @@ class PlayScene extends Phaser.Scene {
 		var level = this.level;
 		//window.addEventListener('resize', resize);
 	    resize();
-	    this.add.image(540, 540, level.backgroundImage);
+	    this.add.image(640, 540, level.backgroundImage);
 
 		let circleGeom = new Phaser.Geom.Circle(0,0, radius);
 
@@ -153,6 +250,10 @@ class PlayScene extends Phaser.Scene {
 		parent.input.keyboard.on('keydown', function (event) {
 			if(!isNaN(event.key)){
 				var key = parseInt(event.key);
+				if(key==0){
+					sequencePosition = -1
+					levelController(parent);
+				}
 				if(key<6 && keys[key]==false){
 					keys[key] = true;
 					parent.onNodeClick(level,key-1,level.players[key-1].stateIndicators,parent)
@@ -173,21 +274,23 @@ class PlayScene extends Phaser.Scene {
 	update (time, delta)
 	{
 		var parent = this;
-		var music = this.level.music;
-		music.delta+=delta;
-		if(music.delta>music.interval){
-			music.delta=0;
-			music.tracks.forEach(function(track,i){
-				var shiftPosition = music.position;
-				if(i>0){
-					shiftPosition = music.position+parent.level.players[i-1].state-parent.level.players[i-1].shift;
-				}
-				var beat = track[mod(shiftPosition, 32)];
-				beat.forEach(function(sample){
-					parent.sound.play(sample);
+		if(sound){
+			var music = this.level.music;
+			music.delta+=delta;
+			if(music.delta>music.interval){
+				music.delta=0;
+				music.tracks.forEach(function(track,i){
+					var shiftPosition = music.position;
+					if(i>0){
+						shiftPosition = music.position+parent.level.players[i-1].state-parent.level.players[i-1].shift;
+					}
+					var beat = track[mod(shiftPosition, 32)];
+					beat.forEach(function(sample){
+						parent.sound.play(sample);
+					});
 				});
-			});
-			music.position++;
+				music.position++;
+			}
 		}
 	}
 
@@ -199,6 +302,7 @@ class PlayScene extends Phaser.Scene {
 			}
 		});
 		if(win){
+			this.add.text(370, 390, 'win!', { fontFamily:'Monoton',fontSize: '200px', fill: '#fff', align: 'center', stroke: '#000000', strokeThickness: 20 });
 			parent.time.delayedCall(2000, function(){
 				levelController(parent);
 			});
@@ -285,46 +389,47 @@ function showButtons(){
 function levelController(parent){
 	sequencePosition++;
 	let level = levelSequence[sequencePosition];
-	console.log(sequencePosition);
-	console.log(level);
 	parent.scene.start(level.scene,level.data);
 }
 
 var levelSequence = [
 	{'scene':'introScene','data':{}},
-	{'scene':'loadScene','data':{}},
+	{'scene':'instructionScene','data':{}},
+	{'scene':'loadScene','data':{'leveltext':'level 1  of  10','invitetext':'Start  with  2  players','invitestart':250,'keyStart':2}},
 	{'scene':'playScene','data':{'difficulty':5,'layout':0,'players':2,'music':0}},
-	{'scene':'loadScene','data':{}},
+	{'scene':'loadScene','data':{'leveltext':'level 2  of  10','invitetext':'Invite  a  3rd  player','invitestart':285,'keyStart':3}},
 	{'scene':'playScene','data':{'difficulty':7,'layout':0,'players':3,'music':1}},
-	{'scene':'loadScene','data':{}},
+	{'scene':'loadScene','data':{'leveltext':'level  3 of  10','invitetext':'3  players  this  round','invitestart':250,'keyStart':3}},
 	{'scene':'playScene','data':{'difficulty':8,'layout':1,'players':3,'music':1}},
-	{'scene':'loadScene','data':{}},
+	{'scene':'loadScene','data':{'leveltext':'level  4 of  10','invitetext':'Invite  a  4th  player','invitestart':300,'keyStart':4}},
 	{'scene':'playScene','data':{'difficulty':7,'layout':0,'players':4,'music':1}},
-	{'scene':'loadScene','data':{}},
+	{'scene':'loadScene','data':{'leveltext':'level  5 of  10','invitetext':'4  players  this  round','invitestart':260,'keyStart':4}},
 	{'scene':'playScene','data':{'difficulty':8,'layout':1,'players':4,'music':2}},
-	{'scene':'loadScene','data':{}},
+	{'scene':'loadScene','data':{'leveltext':'level  6 of  10','invitetext':'4  players  this  round','invitestart':250,'keyStart':4}},
 	{'scene':'playScene','data':{'difficulty':10,'layout':1,'players':4,'music':2}},
-	{'scene':'loadScene','data':{}},
+	{'scene':'loadScene','data':{'leveltext':'level  7 of  10','invitetext':'4  players  this  round','invitestart':260,'keyStart':4}},
 	{'scene':'playScene','data':{'difficulty':11,'layout':2,'players':4,'music':2}},
-	{'scene':'loadScene','data':{}},
+	{'scene':'loadScene','data':{'leveltext':'level  8 of  10','invitetext':'Invite  a  5th  player','invitestart':300,'keyStart':5}},
 	{'scene':'playScene','data':{'difficulty':12,'layout':1,'players':5,'music':2}},
-	{'scene':'loadScene','data':{}},
+	{'scene':'loadScene','data':{'leveltext':'level  9 of  10','invitetext':'5  players  this  round','invitestart':260,'keyStart':5}},
 	{'scene':'playScene','data':{'difficulty':14,'layout':2,'players':5,'music':2}},
-	{'scene':'loadScene','data':{}},
-	{'scene':'playScene','data':{'difficulty':18,'layout':3,'players':5,'music':2}}
+	{'scene':'loadScene','data':{'leveltext':' last level!','invitetext':'5  players  this  round','invitestart':260,'keyStart':5}},
+	{'scene':'playScene','data':{'difficulty':18,'layout':3,'players':5,'music':2}},
+	{'scene':'winScene','data':{}}
 	];
 
 var config = {
     type: Phaser.AUTO,
-    width: 1080,
+    width: 1280,
     height: 1080,
-    backgroundColor: '#ffcc44',
+    backgroundColor: '#ffffff',
     parent: 'app',
-    scene: [IntroScene,LoadScene,PlayScene]
+    scene: [IntroScene,InstructionScene,LoadScene,PlayScene,WinScene]
 };
 
-var radius = 70
+var radius = 70;
 var game = new Phaser.Game(config);
 var keys = [false,false,false,false,false,false]
-var sequencePosition = 0
+var sequencePosition = 0;
 var radians = (Math.PI / 180);
+var sound = false;

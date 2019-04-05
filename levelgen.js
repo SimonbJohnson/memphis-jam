@@ -30,14 +30,13 @@ function generateLevelObject(difficulty,players,totalNodes){
 			connectionsList.push(i);
 		}
 	}
-	console.log(connectionsList);
 
 	var remaining = totalConnections - connectionsList.length;
 	for(i=0;i<remaining;i++){
 		var newNode = Math.floor(Math.random() * totalNodes);
 		connectionsList.push(newNode);
 	}
-	console.log(connectionsList);
+
 	connectionsList = shuffle(connectionsList);
 
 	level.players.forEach(function(p){
@@ -52,7 +51,7 @@ function generateLevelObject(difficulty,players,totalNodes){
 			let randomPlayer = Math.floor(Math.random()*players);
 			let direction = Math.floor(Math.random() * 2)*2-1;
 			unassigned++;
-			console.log(unassigned);
+
 			if(level.players[randomPlayer].connections[connection]==0){
 				level.players[randomPlayer].connections[connection] = direction;
 				unassigned = 50;
@@ -110,10 +109,10 @@ function shuffle(array) {
 }
 
 var layouts = [];
-layouts.push({'background':'3nodes_1.png','nodes':[{'x':540,'y':240},{'x':540,'y':540},{'x':540,'y':840}]});
-layouts.push({'background':'4nodes_1.png','nodes':[{'x':304,'y':101},{'x':641,'y':236},{'x':540,'y':574},{'x':371,'y':878}]});
-layouts.push({'background':'5nodes_2.png','nodes':[{'x':540,'y':338},{'x':338,'y':540},{'x':540,'y':540},{'x':743,'y':540},{'x':540,'y':743}]});
-layouts.push({'background':'6nodes_1.png','nodes':[{'x':200,'y':300},{'x':540,'y':300},{'x':880,'y':300},{'x':200,'y':780},{'x':540,'y':780},{'x':880,'y':780}]});
+layouts.push({'background':'3nodes_1.png','nodes':[{'x':640,'y':240},{'x':640,'y':540},{'x':640,'y':840}]});
+layouts.push({'background':'4nodes_1.png','nodes':[{'x':404,'y':441},{'x':741,'y':236},{'x':874,'y':574},{'x':471,'y':878}]});
+layouts.push({'background':'5nodes_2.png','nodes':[{'x':640,'y':338},{'x':438,'y':540},{'x':640,'y':540},{'x':843,'y':540},{'x':640,'y':743}]});
+layouts.push({'background':'6nodes_1.png','nodes':[{'x':370,'y':360},{'x':550,'y':541},{'x':822,'y':181},{'x':374,'y':888},{'x':728,'y':900},{'x':821,'y':721}]});
 
 var music = [];
 var tune = {'interval':208,'tracks':[]};

@@ -412,9 +412,9 @@ var levelSequence = [
 	{'scene':'loadScene','data':{'leveltext':'level  8 of  10','invitetext':'Invite  a  5th  player','invitestart':300,'keyStart':5}},
 	{'scene':'playScene','data':{'difficulty':12,'layout':1,'players':5,'music':2}},
 	{'scene':'loadScene','data':{'leveltext':'level  9 of  10','invitetext':'5  players  this  round','invitestart':260,'keyStart':5}},
-	{'scene':'playScene','data':{'difficulty':14,'layout':2,'players':5,'music':2}},
+	{'scene':'playScene','data':{'difficulty':12,'layout':2,'players':5,'music':2}},
 	{'scene':'loadScene','data':{'leveltext':' last level!','invitetext':'5  players  this  round','invitestart':260,'keyStart':5}},
-	{'scene':'playScene','data':{'difficulty':18,'layout':3,'players':5,'music':2}},
+	{'scene':'playScene','data':{'difficulty':14,'layout':3,'players':5,'music':2}},
 	{'scene':'winScene','data':{}}
 	];
 
